@@ -1,0 +1,29 @@
+name: docker-latest
+
+# Push on commit + Manually
+on:
+  workflow_run:
+    workflows: ["Build"]
+    branches: [test]
+    types: 
+      - completed
+      - requested
+
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      # Qemu for arm builds
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Print stuff
+        run: |
+          echo " ${{ github.event}}"
+          echo " ${{ github.event.workflow_run}}"
