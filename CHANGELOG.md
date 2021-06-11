@@ -1,6 +1,28 @@
 # HSD Release Notes & Changelog
 
 ## unreleased
+### RPC Changes
+
+- New methods:
+  - `signmessagewithname`: Like `signmessage` but uses a name instead of an address. The owner's address will be used to sign the message.
+  - `verifymessagewithname`: Like `verifymessage` but uses a name instead of an address. The owner's address will be used to verify the message.
+## v2.4.0
+
+### Chain & Consensus changes
+
+- A consensus inflation bug has been fixed. Non-upgraded miners should upgrade
+  as soon as possible. See
+  https://handshake.org/notice/2020-04-02-Inflation-Bug-Disclosure.html for
+  more information.
+- A new chain value migration is necessary (related to the above fix). This
+  migration will automatically run on boot and should only take 2-3 minutes.
+  Pruned nodes _cannot_ run this migration. Note that pruned nodes may have an
+  incorrect chain value until they re-sync.
+
+### Mining changes
+
+- `getwork` has been fixed and improved. See
+  https://github.com/handshake-org/hsd/pull/583.
 
 ### Wallet changes
 
@@ -11,6 +33,15 @@
 
 - Root server DNSSEC has been fixed. It is only authoritative over DS and TXT records,
 and only returns TXT if no NS (referral) is present in the zone.
+
+### Node changes
+
+- `FullNode` and `SPVNode` accept configuration parameter `--no-dns` (or `no-dns: true` in
+`hsd.conf`) which launches the node without either DNS server (the root authoritative
+server and the recursive resolver). This avoids some port collisions with other HNS resolvers
+like hnsd running locally, and generally separates and reduces security concerns around
+running unneeded servers when a node is just used for transactions and blocks.
+`--no-rs` is also accepted to disable the recursive DNS resolver (but keep the root server).
 
 ### Wallet API changes
 
